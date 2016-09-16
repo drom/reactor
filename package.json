@@ -1,0 +1,20 @@
+{
+  "name": "reactor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint src",
+    "build": "browserify src/main.js -o build/bundle.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "^13.1.0",
+    "eslint": "^3.5.0",
+    "eslint-plugin-react": "^6.2.2",
+    "mocha": "^3.0.2",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1"
+  }
+}
