@@ -10,11 +10,12 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "browserify": "^13.1.0",
+    "browserify": "^14.3.0",
     "eslint": "^3.5.0",
     "eslint-plugin-react": "^6.2.2",
     "mocha": "^3.0.2",
-    "react": "^15.3.1",
-    "react-dom": "^15.3.1"
+    "react": "^16.0.0-alpha.10",
+    "react-dom": "^16.0.0-alpha.10",
+    "react-jsonschema-form": "^0.46.0"
   }
 }
