@@ -3,10 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <title>reactor</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
     <style>
-    body {
-        margin: 0px;
-    }
+      body, html {
+        margin: 0;
+        overflow: hidden;
+        height:100%;
+      }
+
+      @media (min-width: 1024px){
+        #left {
+          position: absolute;
+          top: 0px;
+          bottom: 0;
+          left: 0;
+          width: 75%;
+          overflow-y: auto;
+        }
+
+        #right {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          overflow-y: auto;
+          width: 25%;
+        }
+      }
+
+      #left {
+        height:100%;
+      }
+
+      #right {
+        height:100%;
+      }
     </style>
   </head>
   <body>

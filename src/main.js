@@ -3,7 +3,8 @@
 const root = document.getElementById('root');
 
 // require('./simple-json-schema')(root);
-require('./simple-circular')(root);
+require('./simple-schema-bricks')(root);
+// require('./simple-circular')(root);
 
 // ReactDOM.render(
 //   $(grid, {}),
