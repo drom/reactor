@@ -2,7 +2,7 @@
 
 let React = require('react'),
     Form = require('react-jsonschema-form').default,
-    DefaultErrorList = require('react-jsonschema-form/lib/components/ErrorList'),
+    DefaultErrorList = require('react-jsonschema-form/lib/components/ErrorList').default,
     {
       getDefaultFormState,
       shouldRender,
@@ -10,7 +10,7 @@ let React = require('react'),
       setState,
       getDefaultRegistry
     } = require('react-jsonschema-form/lib/utils'),
-    validateFormData = require('react-jsonschema-form/lib/validate'),
+    validateFormData = require('react-jsonschema-form/lib/validate').default,
     ReactDOM = require('react-dom');
 
 const $ = React.createElement;
@@ -57,21 +57,18 @@ function Bd (props) {
 
 function re(Master, Slave) {
 
-  return class Res extends React.Component {
+  let Res = class Res extends React.Component {
 
     constructor(props) {
       super(props);
 
-      Object.keys(Master).forEach(e => {
-        console.log(Object.keys(Master));
-        this[e] = Master[e];
-      });
+      this.propTypes = Master.propTypes;
       // this.handleChange = this.handleChange.bind(this);
       this.onChange = this.onChange.bind(this);
       this.onBlur = this.onBlur.bind(this);
       this.onSubmit = this.onSubmit.bind(this);
 
-      this.state = props;
+      this.state = this.getStateFromProps(props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -238,7 +235,7 @@ function re(Master, Slave) {
               noValidate: noHtml5Validate,
               onSubmit: this.onSubmit
             },
-            // this.renderErrors(),
+            this.renderErrors(),
             $(_SchemaField, {
               schema: schema,
               uiSchema: uiSchema,
@@ -255,6 +252,18 @@ function re(Master, Slave) {
       );
     }
   }
+
+  Res.defaultProps = {
+    uiSchema: {},
+    noValidate: false,
+    liveValidate: false,
+    safeRenderCompletion: false,
+    noHtml5Validate: false,
+    ErrorList: DefaultErrorList,
+  };
+
+  return Res;
+
 }
 
 module.exports = function (root) {
