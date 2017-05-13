@@ -8,5 +8,9 @@ Experiments with React and SVG
  * [react-x11](https://github.com/sidorares/react-x11)
  * [react-blessed](https://github.com/Yomguithereal/react-blessed)
  * react-no-ui?
+ 
+https://github.com/acdlite/react-fiber-architecture
 
+## Preact
+ * [preact](https://github.com/developit/preact/)
  * [preact-render-to-string](https://github.com/developit/preact-render-to-string)
