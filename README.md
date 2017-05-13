@@ -12,8 +12,8 @@ Experiments with React and SVG
 
 ## Fiber
 
-https://github.com/acdlite/react-fiber-architecture
-https://github.com/iamdustan/tiny-react-renderer/blob/master/src/fiber/HowDoesFiberWork.md
+ * https://github.com/acdlite/react-fiber-architecture
+ * https://github.com/iamdustan/tiny-react-renderer/blob/master/src/fiber/HowDoesFiberWork.md
 
 ## Preact
  * [preact](https://github.com/developit/preact/)
