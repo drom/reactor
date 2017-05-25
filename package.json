@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "eslint src",
+    "start": "http-server",
     "build": "browserify src/main.js -o build/bundle.js"
   },
   "author": "",
@@ -14,6 +15,7 @@
     "eslint": "^3.5.0",
     "eslint-plugin-react": "^6.2.2",
     "http-server": "^0.9.0",
+    "immutability-helper": "^2.2.2",
     "mocha": "^3.0.2",
     "react": "^16.0.0-alpha.10",
     "react-dom": "^16.0.0-alpha.10",

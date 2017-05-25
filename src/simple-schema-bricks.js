@@ -1,6 +1,7 @@
 'use strict';
 
 let React = require('react'),
+    update = require('immutability-helper'),
     Form = require('react-jsonschema-form').default,
     DefaultErrorList = require('react-jsonschema-form/lib/components/ErrorList').default,
     {
@@ -25,15 +26,92 @@ const schema = {
             type: 'array',
             title: 'Bricks',
             items: {
-                type: 'string'
+                type: 'integer'
             }
+        },
+        total: {
+            type: 'integer',
+            title: 'Total',
+            minimum: 5,
+            maximum: 10
         }
     }
 };
 
 var data = {
-    bricks: ['a0', 'a1']
+    bricks: ['3', '3']
 };
+
+// React components
+
+function genDerive (_Child) {
+    return function Derive (props) {
+        var newProps = update(props, {
+            appState: {
+                formData: {
+                    total: {
+                        $set: props.appState.formData.bricks
+                        .map(e => parseInt(e, 10))
+                        .reduce((acc, e) => acc + e, 0)
+                    }
+                }
+            }
+        });
+        return $(_Child, newProps);
+    }
+}
+
+function Form1 (props) {
+    const {
+        appProps, appState, appRegistry, appHandlers
+    } = props;
+
+    const {
+        children,
+        safeRenderCompletion,
+        id,
+        className,
+        name,
+        method,
+        target,
+        action,
+        autocomplete,
+        enctype,
+        acceptcharset,
+        noHtml5Validate,
+    } = appProps;
+
+    const { schema, uiSchema, formData, errorSchema, idSchema } = appState;
+    const _SchemaField = appRegistry.fields.SchemaField;
+
+    return $('form',
+      {
+        className: className ? className : 'rjsf',
+        id: id,
+        name: name,
+        method: method,
+        target: target,
+        action: action,
+        autoComplete: autocomplete,
+        encType: enctype,
+        acceptCharset: acceptcharset,
+        noValidate: noHtml5Validate,
+        onSubmit: appHandlers.onSubmit
+      },
+      appHandlers.renderErrors(),
+      $(_SchemaField, {
+        schema: schema,
+        uiSchema: uiSchema,
+        errorSchema: errorSchema,
+        idSchema: idSchema,
+        formData: formData,
+        onChange: appHandlers.onChange,
+        onBlur: appHandlers.onBlur,
+        registry: appRegistry,
+        safeRenderCompletion: safeRenderCompletion
+      })
+  );
+}
 
 function Bd (props) {
   return $('svg', {
@@ -55,7 +133,22 @@ function Bd (props) {
   );
 }
 
-function re(Master, Slave) {
+function Tree (props) {
+  return (
+      $('div', {className: 'container'},
+          $('div', {className: 'col-sm-4', id: 'left'},
+              $(Bd, {
+                  data: props.appState.formData
+              })
+          ),
+          $('div', {className: 'col-sm-8', id: 'right'},
+              $(Form1, props)
+          )
+      )
+  );
+}
+
+function re(Master) {
 
   let Res = class Res extends React.Component {
 
@@ -67,7 +160,7 @@ function re(Master, Slave) {
       this.onChange = this.onChange.bind(this);
       this.onBlur = this.onBlur.bind(this);
       this.onSubmit = this.onSubmit.bind(this);
-
+      this.renderErrors = this.renderErrors.bind(this),
       this.state = this.getStateFromProps(props);
     }
 
@@ -137,8 +230,7 @@ function re(Master, Slave) {
       let state = { status: "editing", formData };
       if (mustValidate) {
         const { errors, errorSchema } = this.validate(formData);
-        // state = { ...state, errors, errorSchema };
-        state = { state, errors, errorSchema };
+        state = update(state, { $merge: { errors, errorSchema }});
       }
       setState(this, state, () => {
         if (this.props.onChange) {
@@ -197,59 +289,17 @@ function re(Master, Slave) {
     }
 
     render () {
-      const {
-        children,
-        safeRenderCompletion,
-        id,
-        className,
-        name,
-        method,
-        target,
-        action,
-        autocomplete,
-        enctype,
-        acceptcharset,
-        noHtml5Validate,
-      } = this.props;
-
-      const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
-      const registry = this.getRegistry();
-      const _SchemaField = registry.fields.SchemaField;
-
-      return $('div', {className: 'container-fluid'},
-        $('div', {className: 'col-sm-4', id: 'left'},
-          $(Slave, { data: this.state.formData })
-        ),
-        $('div', {className: 'col-sm-8', id: 'right'},
-          $('form',
-            {
-              className: className ? className : 'rjsf',
-              id: id,
-              name: name,
-              method: method,
-              target: target,
-              action: action,
-              autoComplete: autocomplete,
-              encType: enctype,
-              acceptCharset: acceptcharset,
-              noValidate: noHtml5Validate,
-              onSubmit: this.onSubmit
-            },
-            this.renderErrors(),
-            $(_SchemaField, {
-              schema: schema,
-              uiSchema: uiSchema,
-              errorSchema: errorSchema,
-              idSchema: idSchema,
-              formData: formData,
-              onChange: this.onChange,
-              onBlur: this.onBlur,
-              registry: registry,
-              safeRenderCompletion: safeRenderCompletion
-            })
-          )
-        )
-      );
+        return $(genDerive(Tree), {
+            appProps: this.props,
+            appState: this.state,
+            appRegistry: this.getRegistry(),
+            appHandlers: {
+                onSubmit: this.onSubmit,
+                onChange: this.onChange,
+                onBlur: this.onBlur,
+                renderErrors: this.renderErrors
+            }
+        });
     }
   }
 
@@ -268,7 +318,7 @@ function re(Master, Slave) {
 
 module.exports = function (root) {
   ReactDOM.render(
-    $(re(Form, Bd), {
+    $(re(Form), {
       schema: schema,
       formData: data,
       onChange: log('changed'),
